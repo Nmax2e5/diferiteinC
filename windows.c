@@ -71,15 +71,12 @@ void clc(){
 
 int mouseClick()
 {
-    hin = GetStdHandle(STD_INPUT_HANDLE);
-    ReadConsoleInput(hin, &InputRecord, 1, &Events);
-
     if(InputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
         return 1;
     return 0;
 }
 
-COORD coord()
+COORD mouseCoord()
 {
     COORD aux = {InputRecord.Event.MouseEvent.dwMousePosition.X, InputRecord.Event.MouseEvent.dwMousePosition.Y};
     return aux;
@@ -106,15 +103,12 @@ int main()
     initWin(800,600);
     while(1)
     {
-        resizeConsole(800, 600);
-        setcolor(4);
+        ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
+        clc();
+        COORD cur=mouseCoord();
 
-        if(mouseClick())
-        {
-            COORD cur = coord();
-            clc();
-            printf("%d %d", cur.X, cur.Y);
-        }
+        printf("%d %d", cur.X, cur.Y);
+
 
     }
 
