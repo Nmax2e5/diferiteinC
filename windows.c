@@ -10,7 +10,7 @@ void setcolor(WORD color);
 void gotoxy(int x, int y);
 void resizeConsole(int width, int height);
 void initWin(int width, int height);
-void clc();
+void clc(int x, int y, int x1, int y1);
 int keyp();
 int mouseDraw();
 int mouseClick();
@@ -23,7 +23,35 @@ void dpy( int x, int y);
 
 //functiile per project
 
+void drawFrame()
+{
+    setcolor(15);
+    gotoxy(4, 2);
+    printf("%c", 201);
+    for(int i=0;i<70;i++)
+        printf("%c", 205);
+    printf("%c\n", 187);
+    for(int i=0;i<30;i++)
+    {
+        gotoxy(4, 3+i);
+        printf("%c", 186);
+        for(int j=0;j<70;j++)
+            printf(" ");
+        printf("%c\n", 186);
+    }
+    gotoxy(4, 33);
+    printf("%c", 200);
+    for(int i=0;i<70;i++)
+        printf("%c", 205);
+    printf("%c\n", 188);
+}
 
+void drawPlayer(int x, int y)
+{
+    dpxy(x, y);
+    dpxy(x-1, y);
+    dpxy(x+1, y);
+}
 
 // end
 
@@ -44,13 +72,13 @@ int main()
     while(1)
     {
         ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
-        clc();
         COORD cur=mouseCoord();
 
-        if(mouseClick())
-            dpxy(cur.X, cur.Y);
+        gotoxy(0,0);
+        if(mouseDraw())
+            printf("%d %d", cur.X, cur.Y);
 
-        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+        //clc(0, 0, 5, 5);
     }
 
     return 0;
@@ -58,7 +86,7 @@ int main()
 
 void setcolor (WORD color)
 {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),14);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
 
     //     0 = Black
     //     1 = Blue
@@ -101,23 +129,19 @@ void initWin(int width, int height)
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
 }
 
-void clc(){
-    COORD coordScreen = { 0, 0 };
-    DWORD cCharsWritten;
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    DWORD dwConSize;
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    GetConsoleScreenBufferInfo(hConsole, &csbi);
-    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
-    FillConsoleOutputCharacter(hConsole, TEXT(' '), dwConSize, coordScreen, &cCharsWritten);
-    GetConsoleScreenBufferInfo(hConsole, &csbi);
-    FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
-    SetConsoleCursorPosition(hConsole, coordScreen);
+void clc(int x, int y, int x1, int y1)
+{
+    for(int i=x; i<=x1;i++)
+        for(int j=y; j<=y1; j++)
+    {
+        gotoxy(i, j);
+        printf(" ");
+    }
 }
 
 int keyp()
 {
+    //InputRecord.Event.KeyEvent.wVirtualKeyCode
     if(InputRecord.EventType == KEY_EVENT)
         return 1;
     return 0;
