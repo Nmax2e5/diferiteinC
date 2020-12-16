@@ -3,12 +3,60 @@
 #include <windows.h>
 #include <time.h>
 
-HANDLE hin;
-HANDLE hout;
 INPUT_RECORD InputRecord;
 DWORD Events;
 
-void setcolor (int color)
+/*********************************************/
+
+void setcolor(WORD color);
+void gotoxy(int x, int y);
+void resizeConsole(int width, int height);
+void initWin(int width, int height);
+void clc();
+int mouseClick();
+COORD mouseCoord();
+void dpxy( int x, int y);
+void dpx( int x, int y);
+void dpy( int x, int y);
+
+/*********************************************/
+
+//functiile per project
+
+
+
+// end
+
+void delay(double number_of_seconds)
+{
+    double milli_seconds = 1000 * number_of_seconds;
+    clock_t start_time = clock();
+    while (clock() < start_time + milli_seconds)
+    {
+        //cazul cu exceptii
+    }
+}
+
+int main()
+{
+    initWin(800,600);
+
+    while(1)
+    {
+        ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
+        //clc();
+        COORD cur=mouseCoord();
+
+        if(mouseClick())
+            dpxy(cur.X, cur.Y);
+
+
+    }
+
+    return 0;
+}
+
+void setcolor (WORD color)
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),14);
 
@@ -30,7 +78,7 @@ void setcolor (int color)
     //     15 = White
 }
 
-void setPos(int x, int y)
+void gotoxy(int x, int y)
 {
     COORD cursorPosition;
     cursorPosition.X = x;
@@ -66,7 +114,6 @@ void clc(){
     GetConsoleScreenBufferInfo(hConsole, &csbi);
     FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
     SetConsoleCursorPosition(hConsole, coordScreen);
-    return;
 }
 
 int mouseClick()
@@ -82,35 +129,17 @@ COORD mouseCoord()
     return aux;
 }
 
-//functiile per project
-
-
-
-// end
-
-void delay(double number_of_seconds)
-{
-    double milli_seconds = 1000 * number_of_seconds;
-    clock_t start_time = clock();
-    while (clock() < start_time + milli_seconds)
-    {
-        //cazul cu exceptii
-    }
+void dpxy(int x, int y){
+        gotoxy(x,y);
+        printf("%c", 219);
 }
 
-int main()
-{
-    initWin(800,600);
-    while(1)
-    {
-        ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
-        clc();
-        COORD cur=mouseCoord();
+void dpx( int x, int y){
+        gotoxy(x,y);
+        printf("%c",254);
+}
 
-        printf("%d %d", cur.X, cur.Y);
-
-
-    }
-
-    return 0;
+void dpy( int x, int y){
+        gotoxy(x,y);
+        printf("%c",220);
 }
