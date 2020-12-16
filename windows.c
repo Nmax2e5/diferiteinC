@@ -6,20 +6,20 @@
 INPUT_RECORD InputRecord;
 DWORD Events;
 
-/*********************************************/
-
 void setcolor(WORD color);
 void gotoxy(int x, int y);
 void resizeConsole(int width, int height);
 void initWin(int width, int height);
 void clc();
+int keyp();
+int mouseDraw();
 int mouseClick();
 COORD mouseCoord();
 void dpxy( int x, int y);
 void dpx( int x, int y);
 void dpy( int x, int y);
 
-/*********************************************/
+/***********************************************************/
 
 //functiile per project
 
@@ -44,13 +44,13 @@ int main()
     while(1)
     {
         ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
-        //clc();
+        clc();
         COORD cur=mouseCoord();
 
         if(mouseClick())
             dpxy(cur.X, cur.Y);
 
-
+        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     }
 
     return 0;
@@ -114,6 +114,20 @@ void clc(){
     GetConsoleScreenBufferInfo(hConsole, &csbi);
     FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
     SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
+int keyp()
+{
+    if(InputRecord.EventType == KEY_EVENT)
+        return 1;
+    return 0;
+}
+
+int mouseDraw()
+{
+    if(InputRecord.EventType == MOUSE_EVENT)
+        return 1;
+    return 0;
 }
 
 int mouseClick()
