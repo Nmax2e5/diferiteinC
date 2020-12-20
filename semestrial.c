@@ -24,7 +24,6 @@ void dpc( int x, int y, char c);
 
 //functiile per project
 
-int bule[1001], len=0;
 
 void drawFrame()
 {
@@ -63,24 +62,6 @@ void drawPlayer(int x, int y)
     dpc(x-2, y+2, 177);
 }
 
-void miscaCorabie()
-{
-    COORD cur=mouseCoord();
-    clc(player.X-2, player.Y-1, player.X+2, player.Y+2);
-    drawPlayer(cur.X, cur.Y);
-    player=cur;
-}
-
-void impusca()
-{
-
-}
-
-miscaBule()
-{
-
-}
-
 // end
 
 void delay(double number_of_seconds)
@@ -89,15 +70,7 @@ void delay(double number_of_seconds)
     clock_t start_time = clock();
     while (clock() < start_time + milli_seconds)
     {
-        if(mouseDraw())
-        {
-            miscacorabie();
-        }
-
-        if(mouseClick())
-        {
-            impusca();
-        }
+        //cazul cu exceptii
     }
 }
 
@@ -162,21 +135,14 @@ int main()
                 while(1)
                 {
                     ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
-
-                    if(mouseClick())
-                    {
-                        impusca();
-                    }
-
                     if(mouseDraw())
                     {
-                        miscacorabie();
                         //clc(5, 3, 74, 32);
+                        COORD cur=mouseCoord();
+                        clc(player.X-2, player.Y-1, player.X+2, player.Y+2);
+                        drawPlayer(cur.X, cur.Y);
+                        player=cur;
                     }
-
-                    miscaBule();
-
-                    delay(0.2);
                 }
 
                 getch();
