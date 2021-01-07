@@ -43,7 +43,7 @@ void delay(double number_of_seconds)
 int main()
 {
     
-    menu_principal();
+    
 
     return 0;
 }
