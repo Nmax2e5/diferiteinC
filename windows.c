@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <time.h>
 
+/* MOTOR GRAFIC */
+
+#include <windows.h>
 INPUT_RECORD InputRecord;
 DWORD Events;
 
@@ -10,7 +12,7 @@ void setcolor(WORD color);
 void gotoxy(int x, int y);
 void resizeConsole(int width, int height);
 void initWin(int width, int height);
-void clc(int x, int y, int x1, int y1);
+void clc();
 int keyp();
 int mouseDraw();
 int mouseClick();
@@ -18,42 +20,15 @@ COORD mouseCoord();
 void dpxy( int x, int y);
 void dpx( int x, int y);
 void dpy( int x, int y);
+void dpc( int x, int y, char c);
 
 /***********************************************************/
 
-//functiile per project
+// functiile per project BEGIN
 
-void drawFrame()
-{
-    setcolor(15);
-    gotoxy(4, 2);
-    printf("%c", 201);
-    for(int i=0;i<70;i++)
-        printf("%c", 205);
-    printf("%c\n", 187);
-    for(int i=0;i<30;i++)
-    {
-        gotoxy(4, 3+i);
-        printf("%c", 186);
-        for(int j=0;j<70;j++)
-            printf(" ");
-        printf("%c\n", 186);
-    }
-    gotoxy(4, 33);
-    printf("%c", 200);
-    for(int i=0;i<70;i++)
-        printf("%c", 205);
-    printf("%c\n", 188);
-}
+    
 
-void drawPlayer(int x, int y)
-{
-    dpxy(x, y);
-    dpxy(x-1, y);
-    dpxy(x+1, y);
-}
-
-// end
+// END
 
 void delay(double number_of_seconds)
 {
@@ -61,28 +36,19 @@ void delay(double number_of_seconds)
     clock_t start_time = clock();
     while (clock() < start_time + milli_seconds)
     {
-        //cazul cu exceptii
+        //iesire din timp
     }
 }
 
 int main()
 {
-    initWin(800,600);
-
-    while(1)
-    {
-        ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &InputRecord, 1, &Events);
-        COORD cur=mouseCoord();
-
-        gotoxy(0,0);
-        if(mouseDraw())
-            printf("%d %d", cur.X, cur.Y);
-
-        //clc(0, 0, 5, 5);
-    }
+    
+    menu_principal();
 
     return 0;
 }
+
+/* FUNCTIILE MOTORULUI GRAFIC */
 
 void setcolor (WORD color)
 {
@@ -127,6 +93,7 @@ void initWin(int width, int height)
     info.dwSize = 100;
     info.bVisible = FALSE;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+    SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_PROCESSED_INPUT);
 }
 
 void clc(int x, int y, int x1, int y1)
@@ -181,3 +148,10 @@ void dpy( int x, int y){
         gotoxy(x,y);
         printf("%c",220);
 }
+
+void dpc( int x, int y, char c){
+        gotoxy(x,y);
+        printf("%c", c);
+}
+
+/***********************************************************************************************/
